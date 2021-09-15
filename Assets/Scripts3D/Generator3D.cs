@@ -32,14 +32,23 @@ public class Generator3D : MonoBehaviour {
     int roomCount;
     [SerializeField]
     Vector3Int roomMaxSize;
-    [SerializeField]
-    GameObject cubePrefab;
+    public GameObject cubePrefab;
     [SerializeField]
     Material redMaterial;
+    string roomTag = "Room";
     [SerializeField]
     Material blueMaterial;
+    string hallTag = "Hall";
     [SerializeField]
     Material greenMaterial;
+    string stairsTag = "Stairs";
+
+    [SerializeField]
+    GameObject floorPrefab;
+    [SerializeField]
+    GameObject corridorPrefab;
+    [SerializeField]
+    GameObject stairsPrefab;
 
     Random random;
     Grid3D<CellType> grid;
@@ -235,21 +244,40 @@ public class Generator3D : MonoBehaviour {
         }
     }
 
-    void PlaceCube(Vector3Int location, Vector3Int size, Material material) {
+    void PlaceCube(Vector3Int location, Vector3Int size, Material material, string tag) 
+    {
+        GameObject go = Instantiate(cubePrefab, location, Quaternion.identity);
+        go.GetComponent<Transform>().localScale = size;
+        go.GetComponent<MeshRenderer>().material = material;
+        go.tag = tag;
+    }
+
+    void PlaceCorridorPrefab(Vector3Int location, Vector3Int size, Material material) 
+    {
         GameObject go = Instantiate(cubePrefab, location, Quaternion.identity);
         go.GetComponent<Transform>().localScale = size;
         go.GetComponent<MeshRenderer>().material = material;
     }
 
-    void PlaceRoom(Vector3Int location, Vector3Int size) {
-        PlaceCube(location, size, redMaterial);
+    void StairsPrefab(Vector3Int location, Vector3Int size, Material material, string tag) 
+    {
+        GameObject go = Instantiate(cubePrefab, location, Quaternion.identity);
+        go.GetComponent<Transform>().localScale = size;
+        go.GetComponent<MeshRenderer>().material = material;
     }
 
-    void PlaceHallway(Vector3Int location) {
-        PlaceCube(location, new Vector3Int(1, 1, 1), blueMaterial);
+    void PlaceRoom(Vector3Int location, Vector3Int size) 
+    {
+        PlaceCube(location, size, redMaterial, roomTag);
     }
 
-    void PlaceStairs(Vector3Int location) {
-        PlaceCube(location, new Vector3Int(1, 1, 1), greenMaterial);
+    void PlaceHallway(Vector3Int location) 
+    {
+        PlaceCube(location, new Vector3Int(1, 1, 1), blueMaterial, hallTag);
+    }
+
+    void PlaceStairs(Vector3Int location) 
+    {
+        StairsPrefab(location, new Vector3Int(1, 1, 1), greenMaterial, stairsTag);
     }
 }
